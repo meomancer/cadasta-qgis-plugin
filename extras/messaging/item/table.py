@@ -8,7 +8,7 @@ Contact : ole.moller.nielsen@gmail.com
      the Free Software Foundation; either version 2 of the License, or
      (at your option) any later version.
 """
-from safe.messaging.item.cell import Cell
+from extras.messaging.item.cell import Cell
 
 __author__ = 'marco@opengis.ch'
 __revision__ = '$Format:%H$'

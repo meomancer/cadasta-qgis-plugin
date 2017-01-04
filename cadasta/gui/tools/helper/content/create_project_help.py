@@ -51,11 +51,10 @@ def content():
 
     message.add(m.Paragraph(tr(
         'Create Project is one of main wizard that will help you to create'
-        'project in qgis and update it to Cadasta with easy steps.'
-        '<b>This wizard</b>')))
+        'project in qgis and update it to Cadasta with easy steps.')))
 
     message.add(m.Paragraph(tr('There are 3 step in this wizard.')))
-    message.add(m.Paragraph(tr('<b>1. Project Definition. </b>.')))
+    message.add(m.ImportantText(tr('1. Project Definition.')))
 
     message.add(m.Paragraph(tr(
         'This step will provide you \'get available organisation\' button. '
@@ -76,8 +75,8 @@ def content():
         tr('- it is url for new project')
     ))
     bullets.add(m.Text(
-        m.ImportantText(tr('QGis Layer to upload')),
-        tr('- select qgis layer that created in qgis.')
+        m.ImportantText(tr('Layer to upload')),
+        tr('- select the layer that was created.')
     ))
     message.add(bullets)
     return message

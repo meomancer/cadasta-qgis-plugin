@@ -50,7 +50,7 @@ def content():
     message = m.Message()
 
     message.add(m.Paragraph(tr(
-        'Options will help you redefine url of cadasta that is used as '
+        'Options will help you redefine url of Cadasta that is used as '
         'source. And also it create a credential to be used on submit '
         'new or updated projects.')))
 
@@ -76,8 +76,6 @@ def content():
     message.add(m.Paragraph(tr(
         'After those fields are filled, click \'test connection\' button '
         'below to test connection. Save button will be enabled if test '
-        'connection is success.')))
-    message.add(m.Paragraph(tr(
-        'Save button will save these setting. <b>Note that your password is '
-        'not saved</b>.')))
+        'connection is success. Save button will save these setting.')))
+    message.add(m.ImportantText(tr('Note that your password is not saved.')))
     return message

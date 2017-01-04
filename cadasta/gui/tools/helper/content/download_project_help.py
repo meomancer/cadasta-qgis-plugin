@@ -51,29 +51,29 @@ def content():
 
     message.add(m.Paragraph(tr(
         'Download Project is one of main wizard that will help you to get '
-        'data from Cadasta. With easy step, you will get data from cadasta, '
-        'and show it to Qgis.')))
+        'data from Cadasta. With easy step, you will get data from Cadasta, '
+        'and show it to QGIS.')))
 
     message.add(m.Paragraph(tr('There are 2 step in this wizard.')))
-    message.add(m.Paragraph(tr('<b>1. Get project step. </b>.')))
+    message.add(m.ImportantText(tr('1. Get project step.')))
 
     message.add(m.Paragraph(tr(
         'This step will provide you \'get available project\' button. '
-        'This button will get available project from cadasta and show '
-        'it in list, in the left of button.')))
+        'This button will get available project from Cadasta and show '
+        'the result in list, in the left of button.')))
 
     message.add(m.Paragraph(tr(
-        'On the buttom of list, there will be description of project, '
+        'On the buttom of list, there will be a description of project, '
         'and change everytime the project is selected in list.')))
 
     message.add(m.Paragraph(tr(
         'After a project is selected, button \'next\' will be enabled. '
         'Push \'next\' button and step 2 will be shown.')))
 
-    message.add(m.Paragraph(tr('<b>2. Download Progress Step</b>.')))
+    message.add(m.ImportantText(tr('2. Download Progress Step.')))
 
     message.add(m.Paragraph(tr(
         'This step will automatically download project that selected in '
         'previous step, and show download progress. After it is done, '
-        'project will be show on qgis and wizard can be closed.')))
+        'project will be show on QGIS and wizard can be closed.')))
     return message

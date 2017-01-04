@@ -17,7 +17,7 @@ __copyright__ = ('Copyright 2012, Australia Indonesia Facility for '
 
 import logging
 
-from safe.utilities.i18n import tr
+from cadasta.utilities.i18n import tr
 
 from item.message_element import MessageElement
 from item.exceptions import InvalidMessageItemError
