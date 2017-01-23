@@ -21,9 +21,10 @@ __copyright__ = 'Copyright 2016, Cadasta'
 
 
 class GetQuestionnaire(BaseApi):
-    """Class to get and put data of questionnaire."""
+    """Class to get data of questionnaire."""
 
-    api_url = '/api/v1/organizations/%{organization_slug}s/projects/%{project_slug}s/questionnaire/'
+    api_url = '/api/v1/organizations/' \
+              '%(organization_slug)s/projects/%(project_slug)s/questionnaire/'
 
     def __init__(self, organization_slug, project_slug, on_finished=None):
         """Constructor.
@@ -39,14 +40,66 @@ class GetQuestionnaire(BaseApi):
         :param on_finished: (optional) function that catch result request
         :type on_finished: Function
         """
+        self.organization_slug = organization_slug
+        self.project_slug = project_slug
         self.request_url = get_url_instance() + self.api_url
-        super(GetQuestionnaire, self).__init__(on_finished)
-        self.on_finished = on_finished
         self.request_url = self.request_url % {
             'organization_slug': organization_slug,
             'project_slug': project_slug
         }
+        super(GetQuestionnaire, self).__init__(on_finished)
+        self.on_finished = on_finished
         self.connect_get()
+
+    def connection_finished(self):
+        """On finished function when tools request is finished."""
+        # extract result
+        if self.error:
+            self.on_finished(
+                (False, self.error,
+                 self.organization_slug, self.project_slug)
+            )
+        else:
+            result = self.get_json_results()
+            if self.on_finished and callable(self.on_finished):
+                self.on_finished(
+                    (True, result,
+                     self.organization_slug, self.project_slug)
+                )
+
+
+class UpdateQuestionnaire(BaseApi):
+    """Class to put data of questionnaire."""
+
+    api_url = '/api/v1/organizations/' \
+              '%(organization_slug)s/projects/%(project_slug)s/questionnaire/'
+
+    def __init__(self, organization_slug, project_slug, new_questionnaire,
+                 on_finished=None):
+        """Constructor.
+
+        It will get Questionnaire from organization_slug and project_slug
+
+        :param organization_slug: Organization slug for Questionnaire
+        :type organization_slug: Str
+
+        :param project_slug: Project slug for Questionnaire
+        :type project_slug: Str
+
+        :param new_questionnaire: New Questionnaire to be updated
+        :type new_questionnaire: Str
+
+        :param on_finished: (optional) function that catch result request
+        :type on_finished: Function
+        """
+        self.request_url = get_url_instance() + self.api_url
+        self.request_url = self.request_url % {
+            'organization_slug': organization_slug,
+            'project_slug': project_slug
+        }
+        super(UpdateQuestionnaire, self).__init__(on_finished)
+        self.on_finished = on_finished
+        self.connect_json_put(new_questionnaire)
 
     def connection_finished(self):
         """On finished function when tools request is finished."""

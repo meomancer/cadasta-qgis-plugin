@@ -21,8 +21,6 @@ class QuestionnaireTest(unittest.TestCase):
         "filename": "jmbibndu9khbsybnnrq8eyjr",
         "title": "StandardCadastaQuestionnaire",
         "id_string": "StandardCadastaQuestionnaire",
-        "xls_form": "https://s3-us-west-2.amazonaws.com/cadasta-platformstaging-bucket/xls-forms/jmbibndu9khbsybnnrq8eyjr.xlsx",
-        "xml_form": "https://s3-us-west-2.amazonaws.com/cadasta-platformstaging-bucket/xml-forms/jmbibndu9khbsybnnrq8eyjr.xml",
         "version": 2016102523562545,
         "questions": [],
         "question_groups": [],

@@ -40,6 +40,9 @@ from cadasta.gui.tools.wizard.project_download_wizard import (
 from cadasta.gui.tools.wizard.project_update_wizard import (
     ProjectUpdateWizard
 )
+from cadasta.gui.tools.widget.questionnaire_widget import (
+    QuestionnaireWidget
+)
 from cadasta.gui.tools.helper.helper_dialog import (
     HelperDialog
 )
@@ -66,8 +69,10 @@ class CadastaPlugin:
         # Save reference to the QGIS interface
         self.iface = iface
         self.action_options_wizard = None
+        self.project_download_wizard = None
         self.project_creation_wizard = None
         self.project_update_wizard = None
+        self.questionnaire_update_wizard = None
         self.wizard = None
 
         # Declare instance attributes
@@ -165,6 +170,7 @@ class CadastaPlugin:
         self._create_project_download_wizard()
         self._create_project_creation_wizard()
         self._create_project_update_wizard()
+        self._create_questionnaire_update_wizard()
         self._create_contact_dialog()
         self._create_help_dialog()
         for action in self.actions:
@@ -219,10 +225,16 @@ class CadastaPlugin:
     def _enable_authenticated_menu(self):
         """Enable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(True)
+        self.project_update_wizard.setEnabled(True)
+        self.project_download_wizard.setEnabled(True)
+        self.questionnaire_update_wizard.setEnabled(True)
 
     def _disable_authenticated_menu(self):
         """Disable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(False)
+        self.project_update_wizard.setEnabled(False)
+        self.project_download_wizard.setEnabled(False)
+        self.questionnaire_update_wizard.setEnabled(False)
 
     # ------------------------------------------------------------------------
     # initiate project creation dialog
@@ -254,7 +266,7 @@ class CadastaPlugin:
     def _create_project_download_wizard(self):
         """Create action for project download wizard."""
         icon_path = resources_path('images', 'icon.png')
-        self.action_options_wizard = self.add_action(
+        self.project_download_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Download Project'),
             parent=self.iface.mainWindow(),
@@ -290,6 +302,31 @@ class CadastaPlugin:
         """Show the project update dialog."""
         dialog = ProjectUpdateWizard(
             iface=self.iface
+        )
+        dialog.show()
+        dialog.exec_()
+
+    # ------------------------------------------------------------------------
+    # initiate update questionnaire dialog
+    # ------------------------------------------------------------------------
+    def _create_questionnaire_update_wizard(self):
+        """Create action for questionnaire update wizard."""
+        icon_path = resources_path('images', 'icon.png')
+        self.questionnaire_update_wizard = self.add_action(
+            icon_path,
+            text=self.tr(u'Update Questionnaire'),
+            parent=self.iface.mainWindow(),
+            add_to_toolbar=False,
+            enabled_flag=True,
+            callback=self.show_questionnaire_update_wizard
+        )
+
+    def show_questionnaire_update_wizard(self):
+        """Show the questionnaire update dialog."""
+        dialog = CadastaDialog(
+            iface=self.iface,
+            subtitle='Update Questionnaire',
+            widget=QuestionnaireWidget()
         )
         dialog.show()
         dialog.exec_()
