@@ -14,6 +14,7 @@ Organisation selection, Generate new questionnairre
 """
 import json
 import logging
+import re
 
 from qgis.gui import QgsMessageBar
 from cadasta.gui.tools.widget.widget_base import (
@@ -32,6 +33,14 @@ __revision__ = '$Format:%H$'
 FORM_CLASS = get_widget_step_ui_class(__file__)
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')
+
+mapping_type = {
+    'String': 'TX',
+    'Integer': 'IN',
+    'Double': 'DE',
+    'Date': 'DA',
+    'DateTime': 'DT'
+}
 
 
 class QuestionnaireWidget(WidgetBase, FORM_CLASS):
@@ -198,28 +207,45 @@ class QuestionnaireWidget(WidgetBase, FORM_CLASS):
             default_questionnaire = json.load(data_file)
 
         try:
+            current_questionnaire = json.dumps(
+                json.loads(current_questionnaire)
+            )
+            current_questionnaire = re.sub(
+                r'"id":[ ]?"(.*?)"', "",
+                current_questionnaire
+            )
+            current_questionnaire = re.sub(
+                r',[ ]?}', '}',
+                current_questionnaire
+            )
+            current_questionnaire = re.sub(
+                r',[ ]?,', ',',
+                current_questionnaire
+            )
             questionnaire = json.loads(current_questionnaire)
-        except ValueError:
+            questionnaire.pop('version', None)
+            questionnaire.pop('id_string', None)
+            questionnaire.pop('md5_hash', None)
+            questionnaire.pop('xls_form', None)
+        except ValueError as e:
+            LOGGER.debug(e)
             default_questionnaire['filename'] = current_layer.name()
             default_questionnaire['title'] = current_layer.name()
             default_questionnaire['id_string'] = current_layer.name()
             questionnaire = default_questionnaire
 
-        # Get current attributes
-        field_names = [field.name() for field in
-                       current_layer.pendingFields()]
-
-        for field_name in field_names:
+        # Get current fields
+        for field in current_layer.fields():
             found = False
             for question in questionnaire["questions"]:
-                if question["name"] == field_name:
+                if question["name"] == field.name():
                     found = True
             if not found:
                 questionnaire["questions"].append(
                     {
-                        "name": field_name,
-                        "label": field_name,
-                        "type": "TX",
+                        "name": field.name(),
+                        "label": field.name(),
+                        "type": mapping_type[field.typeName()],
                         "required": False,
                         "constraint": 'null',
                         "default": 'null',
