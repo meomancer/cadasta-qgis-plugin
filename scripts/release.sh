@@ -16,7 +16,7 @@ fi
 echo ${VERSION}
 
 #see http://stackoverflow.com/questions/1371261/get-current-working-directory-name-in-bash-script
-DIR='cadasta'
+DIR='cadasta-qgis-plugin'
 
 OUT="/tmp/${DIR}.${VERSION}.zip"
 
