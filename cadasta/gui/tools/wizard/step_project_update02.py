@@ -2,7 +2,7 @@
 """
 Cadasta project update step -**Cadasta Wizard**
 
-This module provides: Project Update Step 1 : Project basic information
+This module provides: Project Update Step 2 : Project basic information
 
 .. note:: This program is free software; you can redistribute it and/or modify
      it under the terms of the GNU General Public License as published by
@@ -128,7 +128,7 @@ class StepProjectUpdate02(WizardStep, FORM_CLASS):
         :returns: The step to be switched to
         :rtype: WizardStep, None
         """
-        return None
+        return self.parent.step_project_update03
 
     def send_update_request(self, post_data):
         """Send update request to server and return the responses
