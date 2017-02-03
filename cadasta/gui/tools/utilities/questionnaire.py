@@ -13,7 +13,8 @@ This module provides: Login : Login for cadasta and save authnetication
 import json
 import logging
 import re
-from cadasta.api.questionnaire import GetQuestionnaire
+from qgis.gui import QgsMessageBar
+from cadasta.api.questionnaire import GetQuestionnaire, UpdateQuestionnaire
 from cadasta.utilities.i18n import tr
 from cadasta.utilities.resources import resources_path
 
@@ -102,7 +103,6 @@ class QuestionnaireUtility(object):
             questionnaire.pop('md5_hash', None)
             questionnaire.pop('xls_form', None)
         except ValueError as e:
-            LOGGER.debug(e)
             default_questionnaire['filename'] = current_layer.name()
             default_questionnaire['title'] = current_layer.name()
             default_questionnaire['id_string'] = current_layer.name()
@@ -128,3 +128,30 @@ class QuestionnaireUtility(object):
                     }
                 )
         return json.dumps(questionnaire, indent=4)
+
+    def update_questionnaire(self, organization_slug, project_slug, questionnaire):
+        """Update questionnaire of selected project.
+
+        :param organization_slug: Organization slug for Questionnaire
+        :type organization_slug: Str
+
+        :param project_slug: Project slug for Questionnaire
+        :type project_slug: Str
+
+        :param questionnaire: Questionnaire that will be updated
+        :type questionnaire: Str
+        """
+        self.update_questionnaire_api = UpdateQuestionnaire(
+            organization_slug=organization_slug,
+            project_slug=project_slug,
+            new_questionnaire=questionnaire,
+            on_finished=self.update_questionnaire_finished
+        )
+
+    def update_questionnaire_finished(self, result):
+        """Update questionnaire of selected project is finished.
+
+        :param result: result of request
+        :type result: (bool, list/dict/str, str, str)
+        """
+        pass

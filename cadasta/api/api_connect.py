@@ -29,7 +29,6 @@ class ApiConnect(NetworkMixin):
         :param api_url: url for connection
         :type api_url: str
         """
-        LOGGER.debug(api_url)
         self.request_url = api_url
         super(ApiConnect, self).__init__()
 
