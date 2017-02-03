@@ -29,6 +29,7 @@ class ApiConnect(NetworkMixin):
         :param api_url: url for connection
         :type api_url: str
         """
+        LOGGER.debug(api_url)
         self.request_url = api_url
         super(ApiConnect, self).__init__()
 
@@ -59,6 +60,26 @@ class ApiConnect(NetworkMixin):
         :rtype: ( bool, str )
         """
         self.connect_json_patch(post_data)
+        while not self.reply.isFinished():
+            QCoreApplication.processEvents()
+
+        if not self.error:
+            return True, self.results.data()
+        else:
+            return False, self.results.data()
+
+    def put_json(self, post_data):
+        """Call put method with json data.
+        Use this method to send PUT request with
+        json string data.
+
+        :param post_data: data to post
+        :type post_data: str
+
+        :returns: Tuple of post status and results
+        :rtype: ( bool, str )
+        """
+        self.connect_json_put(post_data)
         while not self.reply.isFinished():
             QCoreApplication.processEvents()
 
