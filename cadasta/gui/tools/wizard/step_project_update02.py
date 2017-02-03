@@ -12,14 +12,12 @@ This module provides: Project Update Step 2 : Project basic information
 """
 import logging
 import json
-from qgis.gui import QgsMessageBar
 from qgis.PyQt.QtGui import QAbstractItemView, QListWidgetItem
 from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtCore import QCoreApplication
 from cadasta.utilities.i18n import tr
 from cadasta.gui.tools.wizard.wizard_step import WizardStep
 from cadasta.gui.tools.wizard.wizard_step import get_wizard_step_ui_class
-from cadasta.gui.tools.utilities.edit_text_dialog import EditTextDialog
 from cadasta.model.contact import Contact
 from cadasta.mixin.network_mixin import NetworkMixin
 from cadasta.common.setting import get_url_instance
@@ -205,42 +203,3 @@ class StepProjectUpdate02(WizardStep, FORM_CLASS):
             self.update_status_label.setText(
                 'Error: %s' % message
             )
-
-    def check_questionnaire_check_button(self):
-        """Method when questionnaire check button is changed.
-        """
-        if self.selected_layer():
-            self.questionnaire_radio_button.setEnabled(True)
-            self.questionnaire_button.setEnabled(True)
-        else:
-            self.questionnaire_radio_button.setEnabled(False)
-            self.questionnaire_button.setEnabled(False)
-
-        if self.questionnaire_radio_button.isChecked():
-            self.questionnaire_button.setEnabled(True)
-            if not self.selected_layer():
-                self.message_bar = QgsMessageBar()
-                self.message_bar.pushWarning(
-                    self.tr('Error'),
-                    self.tr(
-                        'No QGIS layer selected.'
-                    )
-                )
-            else:
-                self.questionnaire = self.generate_new_questionnaire(
-                    self.selected_layer(), ''
-                )
-        else:
-            self.questionnaire_button.setEnabled(False)
-            self.questionnaire = ""
-
-    def show_questionnaire(self):
-        """Method to show current questionnaire.
-        """
-        self.input_dialog = EditTextDialog(self, self.parent.iface, self.questionnaire)
-        self.input_dialog.edit_text_done.connect(self.edit_text_dialog_done)
-
-    def edit_text_dialog_done(self):
-        """Method when edit text dialog is done.
-        """
-        self.questionnaire = self.input_dialog.get_text()

@@ -274,7 +274,8 @@ class StepProjectCreation1(WizardStep, FORM_CLASS, QuestionnaireUtility):
     def show_questionnaire(self):
         """Method to show current questionnaire.
         """
-        self.input_dialog = EditTextDialog(self, self.parent.iface, self.questionnaire)
+        self.input_dialog = EditTextDialog(
+            self, self.parent.iface, self.questionnaire)
         self.input_dialog.edit_text_done.connect(self.edit_text_dialog_done)
 
     def edit_text_dialog_done(self):
