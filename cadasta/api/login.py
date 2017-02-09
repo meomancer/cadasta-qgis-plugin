@@ -8,8 +8,8 @@ Cadasta project - **Login api.**
      (at your option) any later version.
 
 """
-from qgis.PyQt.QtCore import QByteArray
 from cadasta.api.base_api import BaseApi
+from PyQt4.QtCore import QByteArray
 
 __author__ = 'Irwan Fathurrahman <irwan@kartoza.com>'
 __revision__ = '$Format:%H$'

@@ -12,9 +12,9 @@ This module provides: Project Update Step 2 : Project basic information
 """
 import logging
 import json
-from qgis.PyQt.QtGui import QAbstractItemView, QListWidgetItem
-from qgis.PyQt.QtCore import Qt
-from qgis.PyQt.QtCore import QCoreApplication
+from PyQt4.QtGui import QAbstractItemView, QListWidgetItem
+from PyQt4.QtCore import Qt
+from PyQt4.QtCore import QCoreApplication
 from cadasta.utilities.i18n import tr
 from cadasta.gui.tools.wizard.wizard_step import WizardStep
 from cadasta.gui.tools.wizard.wizard_step import get_wizard_step_ui_class
@@ -45,13 +45,6 @@ class StepProjectUpdate02(WizardStep, FORM_CLASS):
         self.parent = parent
         self.project = None
         self.update_button.clicked.connect(self.update_project)
-        self.questionnaire_radio_button.toggled.connect(
-            self.check_questionnaire_check_button
-        )
-        self.questionnaire_button.clicked.connect(
-            self.show_questionnaire
-        )
-        self.check_questionnaire_check_button()
 
     def set_widgets(self):
         """Set all widgets on the tab."""

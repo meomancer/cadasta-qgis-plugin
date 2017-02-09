@@ -129,7 +129,8 @@ class QuestionnaireUtility(object):
                 )
         return json.dumps(questionnaire, indent=4)
 
-    def update_questionnaire(self, organization_slug, project_slug, questionnaire):
+    def update_questionnaire(
+            self, organization_slug, project_slug, questionnaire):
         """Update questionnaire of selected project.
 
         :param organization_slug: Organization slug for Questionnaire

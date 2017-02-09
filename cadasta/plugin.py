@@ -21,8 +21,8 @@
  ***************************************************************************/
 """
 import logging
-from qgis.PyQt.QtCore import QCoreApplication
-from qgis.PyQt.QtGui import (
+from PyQt4.QtCore import QCoreApplication
+from PyQt4.QtGui import (
     QAction,
     QIcon
 )
@@ -221,14 +221,10 @@ class CadastaPlugin:
     def _enable_authenticated_menu(self):
         """Enable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(True)
-        self.project_update_wizard.setEnabled(True)
-        self.project_download_wizard.setEnabled(True)
 
     def _disable_authenticated_menu(self):
         """Disable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(False)
-        self.project_update_wizard.setEnabled(False)
-        self.project_download_wizard.setEnabled(False)
 
     # ------------------------------------------------------------------------
     # initiate project creation dialog
