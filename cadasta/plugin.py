@@ -191,7 +191,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_options_dialog(self):
         """Create action for options dialog."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'cadasta-options-64.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Options'),
@@ -229,7 +229,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_project_creation_wizard(self):
         """Create action for project creation wizard."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'cadasta-create-64.png')
         self.project_creation_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Create Project'),
@@ -253,7 +253,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_project_download_wizard(self):
         """Create action for project download wizard."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'cadasta-download-64.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Download Project'),
@@ -276,7 +276,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_project_update_wizard(self):
         """Create action for project update wizard."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'cadasta-update-64.png')
         self.project_update_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Update Project'),
@@ -299,7 +299,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_contact_dialog(self):
         """Create action for contact."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'cadasta-contact-64.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Contact'),
@@ -324,7 +324,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_help_dialog(self):
         """Create action for help diaog."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'casdasta-help-64.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Help'),
