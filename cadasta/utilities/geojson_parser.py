@@ -60,7 +60,7 @@ class GeojsonParser(object):
         """
         return self.geojson
 
-    def get_geojson_string(self):
+    def geojson_string(self):
         """Returning geojson in string format.
 
         :return: geojson string
@@ -76,7 +76,7 @@ class GeojsonParser(object):
         """
         return self.original_geojson
 
-    def get_original_geojson_string(self):
+    def original_geojson_string(self):
         """Returning original geojson in string format.
 
         :return: geojson string
