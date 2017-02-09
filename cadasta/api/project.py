@@ -31,8 +31,7 @@ class Project(BaseApi):
         :param on_finished: (optional) function that catch result request
         :type on_finished: Function
         """
-        permissions = '?permissions=project.update'
-        self.request_url = get_url_instance() + self.api_url + permissions
+        self.request_url = get_url_instance() + self.api_url
         super(Project, self).__init__()
         self.on_finished = on_finished
         self.connect_get()
