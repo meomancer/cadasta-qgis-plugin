@@ -116,7 +116,7 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
         geojson = GeojsonParser(geojson)
         filename = get_path_data(organization_slug, project_slug)
         file_ = open(filename, 'w')
-        file_.write(geojson.get_geojson_string())
+        file_.write(geojson.geojson_string())
         file_.close()
         vlayer = QgsVectorLayer(
             filename, "%s/%s" % (organization_slug, project_slug), "ogr")
