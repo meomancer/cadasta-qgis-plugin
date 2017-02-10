@@ -13,13 +13,15 @@ Cadasta **Cadasta About Dialog.**
 import logging
 from PyQt4.QtGui import QDialog
 
+from cadasta.gui.tools.about.content.overview import overview
+from cadasta.gui.tools.about.content.version import version
 from cadasta.gui.tools.about.content.license import license_about
 from cadasta.utilities.i18n import tr
 from cadasta.utilities.resources import (
     html_header,
     html_footer,
     get_ui_class,
-    get_metadata_path
+    get_plugin_version
 )
 
 __copyright__ = "Copyright 2016, Cadasta"
@@ -52,17 +54,7 @@ class AboutDialog(QDialog, FORM_CLASS):
         QDialog.__init__(self, parent)
         self.setupUi(self)
 
-        # get version
-        with open(get_metadata_path()) as file_:
-            contents = file_.readlines()
-        version = '-'
-        for content in contents:
-            content = content.replace('\n', '')
-            if 'version=' in content:
-                version = content.split('=')[1]
-                break
-
-        self.setWindowTitle('About Cadasta %s' % version)
+        self.setWindowTitle(tr('About Cadasta %s' % get_plugin_version()))
         self.iface = iface
         # set the helpers
         self.show_cadasta_about()
@@ -72,8 +64,16 @@ class AboutDialog(QDialog, FORM_CLASS):
         header = html_header()
         footer = html_footer()
         string = header
+
+        message = overview()
+        string += message.to_html()
+
+        message = version()
+        string += message.to_html()
+
         message = license_about()
         string += message.to_html()
+
         string += footer
 
         self.help_web_view.setHtml(string)

@@ -163,3 +163,21 @@ def get_metadata_path():
         )
     )
     return project_path
+
+
+def get_plugin_version():
+    """Get plugin version from metadata.
+
+    :rtype: basetring
+    :return absolute metadata path
+    """
+    # get version
+    with open(get_metadata_path()) as metadata_file:
+        contents = metadata_file.readlines()
+    version = ''
+    for content in contents:
+        content = content.replace('\n', '')
+        if 'version=' in content:
+            version = content.split('=')[1]
+            break
+    return version
