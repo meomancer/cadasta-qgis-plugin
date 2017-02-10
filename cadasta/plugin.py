@@ -43,11 +43,12 @@ from cadasta.gui.tools.wizard.project_update_wizard import (
 from cadasta.gui.tools.helper.helper_dialog import (
     HelperDialog
 )
-from cadasta.common.setting import get_authtoken
+from cadasta.common.setting import get_authtoken, get_user_organizations
 
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
 from cadasta.utilities.resources import resources_path
+from cadasta.utilities.utilities import Utilities
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')
 
@@ -71,9 +72,28 @@ class CadastaPlugin:
         self.project_update_wizard = None
         self.questionnaire_update_wizard = None
         self.wizard = None
+        self.iface.currentLayerChanged.connect(self.layer_changed)
 
         # Declare instance attributes
         self.actions = []
+
+    def layer_changed(self, layer):
+        """Function that triggered when layer changed.
+
+        :param layer: New layer that selected.
+        :type layer: QgsVectorLayer
+        """
+        if get_authtoken() and layer:
+            information = Utilities.get_basic_information_by_vector(layer)
+            if information:
+                try:
+                    organization_slug = information['organization']['slug']
+                    if organization_slug in get_user_organizations():
+                        self.project_update_wizard.setEnabled(True)
+                        return
+                except TypeError:
+                    pass
+        self.project_update_wizard.setEnabled(False)
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -174,6 +194,7 @@ class CadastaPlugin:
                 self.tr(u'&Cadasta'),
                 action)
 
+        self.project_update_wizard.setEnabled(False)
         if get_authtoken():
             self._enable_authenticated_menu()
         else:
@@ -193,7 +214,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_options_dialog(self):
         """Create action for options dialog."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'cadasta-options-64.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Options'),
@@ -221,17 +242,23 @@ class CadastaPlugin:
     def _enable_authenticated_menu(self):
         """Enable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(True)
+        if len(self.iface.legendInterface().selectedLayers()) > 0:
+            self.layer_changed(
+                self.iface.legendInterface().selectedLayers()[0])
+        else:
+            self.layer_changed(None)
 
     def _disable_authenticated_menu(self):
         """Disable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(False)
+        self.project_update_wizard.setEnabled(False)
 
     # ------------------------------------------------------------------------
     # initiate project creation dialog
     # ------------------------------------------------------------------------
     def _create_project_creation_wizard(self):
         """Create action for project creation wizard."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'cadasta-create-64.png')
         self.project_creation_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Create Project'),
@@ -255,8 +282,8 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_project_download_wizard(self):
         """Create action for project download wizard."""
-        icon_path = resources_path('images', 'icon.png')
-        self.project_download_wizard = self.add_action(
+        icon_path = resources_path('images', 'cadasta-download-64.png')
+        self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Download Project'),
             parent=self.iface.mainWindow(),
@@ -278,7 +305,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_project_update_wizard(self):
         """Create action for project update wizard."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'cadasta-update-64.png')
         self.project_update_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Update Project'),
@@ -301,7 +328,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_contact_dialog(self):
         """Create action for contact."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'cadasta-contact-64.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Contact'),
@@ -326,7 +353,7 @@ class CadastaPlugin:
     # ------------------------------------------------------------------------
     def _create_help_dialog(self):
         """Create action for help diaog."""
-        icon_path = resources_path('images', 'icon.png')
+        icon_path = resources_path('images', 'casdasta-help-64.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Help'),
