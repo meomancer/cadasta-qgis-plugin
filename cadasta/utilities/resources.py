@@ -129,3 +129,37 @@ def get_project_path():
         )
     )
     return project_path
+
+
+def get_license_path():
+    """Get absolute license file path.
+
+    :rtype: basetring
+    :return absolute license path
+    """
+    project_path = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            os.pardir,
+            os.pardir,
+            'LICENSE.txt'
+        )
+    )
+    return project_path
+
+
+def get_metadata_path():
+    """Get absolute metadata file path.
+
+    :rtype: basetring
+    :return absolute metadata path
+    """
+    project_path = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            os.pardir,
+            os.pardir,
+            'metadata.txt'
+        )
+    )
+    return project_path
