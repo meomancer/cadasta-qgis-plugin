@@ -166,7 +166,7 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
         )
 
         if status:
-            self.project_upload_result = json.loads(result)
+            self.project_upload_result = result
             total_locations = len(self.data['locations']['features'])
             if total_locations > 0:
                 self.upload_locations()
@@ -212,7 +212,7 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
             if status:
                 self.set_progress_bar(self.current_progress + progress_left)
                 try:
-                    result_obj = json.loads(result)
+                    result_obj = result
                     if 'properties' in result_obj:
                         location['spatial_id'] = result_obj['properties'][
                             'id']
@@ -304,7 +304,7 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
                 if status:
                     party += 1
                     try:
-                        result_dict = json.loads(result)
+                        result_dict = result
                         if 'id' in result_dict:
                             layer['party_id'] = result_dict['id']
                     except ValueError as e:

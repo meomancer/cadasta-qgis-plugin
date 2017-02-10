@@ -138,6 +138,7 @@ class StepProjectUpdate02(WizardStep, FORM_CLASS):
         :returns: Tuple of request status and error message
         :rtype: ( bool, str )
         """
+        LOGGER.debug(post_data)
         update_url = '/api/v1/organizations/%s/projects/%s/' % (
             self.project['organization']['slug'],
             self.project['slug']
