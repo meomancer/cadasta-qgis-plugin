@@ -11,6 +11,7 @@ This module provides: Project Download Step 2 : Download Project
 
 """
 import logging
+import json
 import os
 from PyQt4.QtCore import QVariant
 from qgis.core import (
@@ -116,7 +117,9 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
                     result[1],
                     organization_slug,
                     project_slug)
+            self.progress_bar.setValue(50)
             relationship_layer = self.relationships_layer(vlayers)
+            self.progress_bar.setValue(80)
             party_layer = self.parties_layer()
             party_layer_id = None
             if party_layer:
@@ -205,6 +208,8 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
             questionnaire_attr = party['attributes']
             if not questionnaire_attr:
                 questionnaire_attr = '-'
+            else:
+                questionnaire_attr = json.dumps(questionnaire_attr)
             feature.setAttributes([
                 party['id'],
                 party['name'],
@@ -215,6 +220,8 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
             party_layer.commitChanges()
             QCoreApplication.processEvents()
 
+        self.process_attributes(party_layer)
+
         Utilities.add_tabular_layer(
             party_layer,
             organization_slug,
@@ -223,6 +230,73 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
         )
 
         return party_layer
+
+    def process_attributes(self, layer):
+        """Check questionnaire attributes column on each feature.
+
+           If json string, then run parse questionnaire.
+
+        :param layer: Attribute layer
+        :type layer: QgsVectorLayer
+        """
+        features = layer.getFeatures()
+
+        for feature in features:
+            attributes = feature.attributes()
+            questionnaire_index = layer.fieldNameIndex('attributes')
+            questionnaire = attributes[questionnaire_index]
+
+            if not questionnaire:
+                continue
+
+            try:
+                questionnaire_dict = json.loads(questionnaire)
+            except ValueError, e:
+                continue
+
+            if questionnaire_dict:
+                layer.startEditing()
+                layer.deleteAttribute(questionnaire_index)
+                layer.commitChanges()
+                self.parse_questionnaire(layer, feature, questionnaire_dict)
+
+    def parse_questionnaire(self, layer, feature, questionnaire_dict):
+        """Parsing list of attribute to attribute table.
+
+        :param layer: attribute vector layer
+        :type layer: QgsVectorLayer
+
+        :param feature: attribute feature
+        :type feature: QgsFeature
+
+        :param questionnaire_dict: questionnaire object dictionary
+        :type questionnaire_dict: dict
+        """
+
+        for key, value in questionnaire_dict.iteritems():
+            index = layer.fieldNameIndex(key)
+            if index == -1:
+                # Add column
+                new_field = QgsField(
+                    QgsField(
+                        key,
+                        QVariant.String,
+                        'string'
+                    )
+                )
+
+                layer.startEditing()
+                layer.addAttribute(new_field)
+                layer.commitChanges()
+
+                index = layer.fieldNameIndex(key)
+
+            layer.startEditing()
+            column_value = value
+            if not value:
+                column_value = '-'
+            layer.changeAttributeValue(feature.id(), index, column_value)
+            layer.commitChanges()
 
     def relationships_layer(self, vector_layers):
         """Create relationship layer.
@@ -289,6 +363,8 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
                         questionnaire_attr = result['attributes']
                         if not questionnaire_attr:
                             questionnaire_attr = '-'
+                        else:
+                            questionnaire_attr = json.dumps(questionnaire_attr)
                         fet.setAttributes([
                             attributes[spatial_id_index],
                             result['id'],
@@ -300,6 +376,8 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
                         relationship_layer.commitChanges()
                 except (IndexError, KeyError):
                     continue
+
+        self.process_attributes(relationship_layer)
 
         Utilities.add_tabular_layer(
             relationship_layer,
