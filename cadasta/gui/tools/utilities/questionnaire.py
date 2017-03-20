@@ -60,18 +60,22 @@ class QuestionnaireUtility(object):
         """
         pass
 
-    def generate_new_questionnaire(self, current_layer, current_questionnaire):
+    def generate_new_questionnaire(
+            self, current_layer, mapped_fields, current_questionnaire):
         """Generate new questionnaire.
 
         This will get current questionnaire or create from default
         questionnaire. Updating it by looking of fields from current layer.
 
-        Questionnaire is based on current layer field. All of new field that not
-        in questionnaire will be append to
+        Questionnaire is based on current layer field.
+        All of new field that not in questionnaire will be append to
         question group -> 'location_attributes'
 
-        :param current_layer:layer that using for generate questionnaire
+        :param current_layer: layer that using for generate questionnaire
         :type current_layer: QgsVectorLayer
+
+        :param mapped_fields: Mapping fields of layer to key on questionnaire
+        :type mapped_fields: dict
 
         :param current_questionnaire: Questionnaire that found
         :type current_questionnaire: Str
@@ -123,6 +127,7 @@ class QuestionnaireUtility(object):
 
         # Get current fields
         # Current field of layer for attribute
+        # insert into 'location_attributes'
         location_attributes = {
             "name": "location_attributes",
             "label": "Location Attributes",
@@ -130,24 +135,26 @@ class QuestionnaireUtility(object):
             "questions": []
         }
         for field in current_layer.fields():
-            if field.name() != 'id':
-                if field.name() not in attributes_in_questionnaire:
-                    try:
-                        # check location attributes in question group
-                        location_attributes["questions"].append(
-                            {
-                                "name": field.name(),
-                                "label": field.name(),
-                                "type": mapping_type[field.typeName().lower()],
-                                "required": False,
-                                "constraint": 'null',
-                                "default": 'null',
-                                "hint": 'null',
-                                "relevant": 'null'
-                            }
-                        )
-                    except KeyError:
-                        pass
+            field_name = field.name()
+            if field_name != 'id':
+                if field_name not in attributes_in_questionnaire:
+                    if field_name not in mapped_fields:
+                        try:
+                            # check location attributes in question group
+                            location_attributes["questions"].append(
+                                {
+                                    "name": field_name,
+                                    "label": field_name,
+                                    "type": mapping_type[field.typeName().lower()],
+                                    "required": False,
+                                    "constraint": 'null',
+                                    "default": 'null',
+                                    "hint": 'null',
+                                    "relevant": 'null'
+                                }
+                            )
+                        except KeyError:
+                            pass
 
         # insert into questionnaire
         if len(location_attributes["questions"]) > 0:
