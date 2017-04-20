@@ -120,7 +120,7 @@ class Contact(object):
                 'VALUE': value
             })
         query = CadastaDatabase.get_from_database(
-            Contact.__name__, ','.join(query_filter))
+            Contact.__name__, ' and '.join(query_filter))
 
         #  convert
         output = []
