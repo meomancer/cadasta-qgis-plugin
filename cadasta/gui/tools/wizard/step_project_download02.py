@@ -133,7 +133,10 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
                 relationship_layer.id(),
                 party_layer_id
             )
-            project_contacts = self.project['contacts']
+
+            project_contacts = []
+            if 'contacts' in self.project:
+                project_contacts = self.project['contacts']
 
             for index, contact in enumerate(project_contacts):
                 contact_name = contact['name']
