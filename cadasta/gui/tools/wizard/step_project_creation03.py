@@ -151,8 +151,34 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
         # Upload project
         self.upload_project()
 
+    def check_requirement(self):
+        """Checking attributes that required.
+
+        :return: Is missed
+        :rtype: bool
+        """
+        requirement_miss = False
+        for location in self.data['locations']['features']:
+            try:
+                location['fields']['location_type']
+            except KeyError:
+                self.set_progress_bar(0)
+                self.set_status(
+                    self.extract_error_detail(
+                        tr('Location_type is not found in attribute. '
+                           'Please update before uploading again.')
+                    )
+                )
+                requirement_miss = True
+                break
+        return requirement_miss
+
     def upload_project(self):
         """Upload project to cadasta."""
+        # check requirement attributes
+        if self.check_requirement():
+            return
+
         self.set_status(
             tr('Uploading project')
         )
@@ -285,8 +311,8 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
 
             connector = ApiConnect(get_url_instance() + post_url)
             status, result = self._call_json_post(
-                    connector,
-                    json.dumps(post_data))
+                connector,
+                json.dumps(post_data))
 
             if status:
                 self.set_progress_bar(self.current_progress + progress_left)
@@ -634,7 +660,7 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
                             result['tenure_type'],
                             result['party']['id'],
                             questionnaire_attr,
-                            ])
+                        ])
                         relationship_layer.addFeature(fet, True)
                         relationship_layer.commitChanges()
                 except (IndexError, KeyError):
@@ -670,8 +696,8 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
 
         api = '/api/v1/organizations/{organization_slug}/projects/' \
               '{project_slug}/parties/'.format(
-                organization_slug=organization_slug,
-                project_slug=project_slug)
+            organization_slug=organization_slug,
+            project_slug=project_slug)
 
         connector = ApiConnect(get_url_instance() + api)
         status, results = connector.get()
