@@ -75,10 +75,17 @@ class StepProjectCreation2(WizardStep, FORM_CLASS, QuestionnaireUtility):
         if not self.layer or self.layer != self.parent.layer:
             self.layer = self.parent.layer
             self.set_attributes_box()
-        self.questionnaire_button.clicked.connect(
-            self.show_questionnaire
-        )
+        self.advanced_box.setVisible(False)
+        self.advanced_button.mousePressEvent = self.toogled_advanced_area
         self.check_questionnaire()
+
+    def toogled_advanced_area(self, event):
+        """Toogled advanced area
+        """
+        if self.advanced_box.isVisible():
+            self.advanced_box.setVisible(False)
+        else:
+            self.advanced_box.setVisible(True)
 
     def set_items_combo_box(self, combo_box, field_names):
         """Set items for combo box.
@@ -151,15 +158,6 @@ class StepProjectCreation2(WizardStep, FORM_CLASS, QuestionnaireUtility):
         self.questionnaire = self.generate_new_questionnaire(
             self.layer, self.cadasta_fields_reversed(), '',
         )
-
-    def show_questionnaire(self):
-        """Method to show current questionnaire.
-        """
-        self.input_dialog = EditTextDialog(
-            self, self.parent.iface, self.questionnaire)
-        self.input_dialog.edit_text_done.connect(self.edit_text_dialog_done)
-
-    def edit_text_dialog_done(self):
-        """Method when edit text dialog is done.
-        """
-        self.questionnaire = self.input_dialog.get_text()
+        self.questionnaire_edit_text.setText(
+            self.questionnaire
+        )
