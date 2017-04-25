@@ -138,19 +138,15 @@
               <number>5</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>Edit Questionaire Fields</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QTextEdit" name="questionnaire_edit_text">
+              <widget class="QPushButton" name="questionnaire_button">
                <property name="maximumSize">
                 <size>
-                 <width>16777215</width>
-                 <height>400</height>
+                 <width>200</width>
+                 <height>16777215</height>
                 </size>
+               </property>
+               <property name="text">
+                <string>Edit Questionnaire Field</string>
                </property>
               </widget>
              </item>

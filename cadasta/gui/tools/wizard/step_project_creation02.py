@@ -77,6 +77,9 @@ class StepProjectCreation2(WizardStep, FORM_CLASS, QuestionnaireUtility):
             self.set_attributes_box()
         self.advanced_box.setVisible(False)
         self.advanced_button.mousePressEvent = self.toogled_advanced_area
+        self.questionnaire_button.clicked.connect(
+            self.show_questionnaire
+        )
         self.check_questionnaire()
 
     def toogled_advanced_area(self, event):
@@ -158,6 +161,15 @@ class StepProjectCreation2(WizardStep, FORM_CLASS, QuestionnaireUtility):
         self.questionnaire = self.generate_new_questionnaire(
             self.layer, self.cadasta_fields_reversed(), '',
         )
-        self.questionnaire_edit_text.setText(
-            self.questionnaire
-        )
+
+    def show_questionnaire(self):
+        """Method to show current questionnaire.
+        """
+        self.input_dialog = EditTextDialog(
+            self, self.parent.iface, self.questionnaire)
+        self.input_dialog.edit_text_done.connect(self.edit_text_dialog_done)
+
+    def edit_text_dialog_done(self):
+        """Method when edit text dialog is done.
+        """
+        self.questionnaire = self.input_dialog.get_text()
